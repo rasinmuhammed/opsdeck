@@ -1030,9 +1030,7 @@ def create_admin_router(
                 cell.font = header_font
                 cell.fill = header_fill
                 cell.alignment = Alignment(horizontal="center", vertical="center")
-                ws.column_dimensions[cell.column_letter].width = max(
-                    len(field) + 4, 12
-                )
+                ws.column_dimensions[cell.column_letter].width = max(len(field) + 4, 12)
 
             for row_idx, row in enumerate(all_rows, start=2):
                 for col_idx, field in enumerate(fields, start=1):

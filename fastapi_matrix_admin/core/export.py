@@ -168,7 +168,9 @@ class ExcelExporter:
 
         # Header row with styling
         header_font = Font(bold=True, color="FFFFFF")
-        header_fill = PatternFill(start_color="1E3A5F", end_color="1E3A5F", fill_type="solid")
+        header_fill = PatternFill(
+            start_color="1E3A5F", end_color="1E3A5F", fill_type="solid"
+        )
         header_align = Alignment(horizontal="center", vertical="center")
 
         for col_idx, field in enumerate(fields, start=1):
