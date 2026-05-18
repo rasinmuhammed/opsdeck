@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+{% extends base_template %}
 {% import "components/buttons.html" as buttons %}
 {% import "components/inputs.html" as inputs %}
 
@@ -38,12 +38,23 @@
             <div class="flex items-center space-x-2">
                 <a href="#"
                     onclick='window.location.href = "{{ url_for("admin:export_csv", model=model_config.name) }}" + window.location.search; return false;'
-                    class="group relative overflow-hidden flex items-center space-x-2 rounded-lg bg-blue-500/10 border border-blue-500/30 px-4 py-2 hover:bg-blue-500/20 hover:border-blue-400/50 transition-all duration-300">
-                    <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="group relative overflow-hidden flex items-center space-x-2 rounded-lg bg-blue-500/10 border border-blue-500/30 px-4 py-2 hover:bg-blue-500/20 hover:border-blue-400/50 transition-all duration-300"
+                    title="Export as CSV">
+                    <svg class="h-4 w-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    <span class="font-mono text-sm font-semibold text-blue-100">EXPORT</span>
+                    <span class="font-mono text-sm font-semibold text-blue-100">CSV</span>
+                </a>
+                <a href="#"
+                    onclick='window.location.href = "{{ url_for("admin:export_xlsx", model=model_config.name) }}" + window.location.search; return false;'
+                    class="group relative overflow-hidden flex items-center space-x-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 hover:bg-emerald-500/20 hover:border-emerald-400/50 transition-all duration-300"
+                    title="Export as Excel (.xlsx)">
+                    <svg class="h-4 w-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="font-mono text-sm font-semibold text-emerald-100">XLSX</span>
                 </a>
 
                 <a href="{{ url_for('admin:create', model=model_config.name) }}"

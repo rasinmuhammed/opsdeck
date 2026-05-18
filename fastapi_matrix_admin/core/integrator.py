@@ -39,7 +39,8 @@ class FieldType(str, Enum):
     FILE = "file"
     IMAGE = "image"
     JSON = "json"
-    RELATIONSHIP = "relationship"  # New type for FKs
+    RELATIONSHIP = "relationship"  # FK (many-to-one)
+    MANY_TO_MANY = "many_to_many"  # M2M via secondary table
     UNION = "union"  # For discriminated unions
     NESTED = "nested"  # For nested objects
     LIST = "list"  # For list fields

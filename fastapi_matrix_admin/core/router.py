@@ -58,13 +58,41 @@ def extract_sqlalchemy_fields(
         List of FieldDefinition objects for template rendering
     """
     from sqlalchemy import inspect as sqla_inspect
-    from sqlalchemy.orm import ColumnProperty
+    from sqlalchemy.orm import ColumnProperty, RelationshipProperty
 
     mapper = sqla_inspect(model)
     fields = []
 
     # Get all columns
     for attr in mapper.attrs:
+        if isinstance(attr, RelationshipProperty) and attr.secondary is not None:
+            # Many-to-many relationship via secondary table
+            field_name = attr.key
+            if include and field_name not in include:
+                continue
+            if exclude and field_name in exclude:
+                continue
+
+            target_class = attr.mapper.class_
+            target_name = target_class.__name__
+
+            # Try to resolve to registry name
+            if registry:
+                for config in registry.all():
+                    if config.model is target_class:
+                        target_name = config.name
+                        break
+
+            field_def = FieldDefinition(
+                name=field_name,
+                field_type=FieldType.MANY_TO_MANY,
+                required=False,
+                title=field_name.replace("_", " ").title(),
+                target_model=target_name,
+            )
+            fields.append(field_def)
+            continue
+
         if isinstance(attr, ColumnProperty):
             column = attr.columns[0]
             field_name = attr.key
@@ -165,6 +193,40 @@ def model_to_dict(model: Any, exclude: set[str] | None = None) -> dict[str, Any]
     return data
 
 
+async def _load_m2m_choices(
+    session: Any,
+    fields: list,
+    registry: Any,
+) -> dict[str, list[tuple[str, str]]]:
+    """Load (id, label) choices for all MANY_TO_MANY fields from the database."""
+    from sqlalchemy import select as sa_select
+
+    choices: dict[str, list[tuple[str, str]]] = {}
+    for f in fields:
+        if f.field_type != FieldType.MANY_TO_MANY:
+            continue
+        target_model_class = None
+        for config in registry.all():
+            if config.name == f.target_model or config.model.__name__ == f.target_model:
+                target_model_class = config.model
+                break
+        if target_model_class is None:
+            choices[f.name] = []
+            continue
+        result = await session.execute(sa_select(target_model_class))
+        instances = result.scalars().all()
+        field_choices: list[tuple[str, str]] = []
+        for inst in instances:
+            inst_id = str(getattr(inst, "id", ""))
+            if hasattr(inst, "__admin_repr__"):
+                label = inst.__admin_repr__()
+            else:
+                label = str(inst)
+            field_choices.append((inst_id, label))
+        choices[f.name] = field_choices
+    return choices
+
+
 def create_admin_router(
     registry: "AdminRegistry",
     signer: "URLSigner",
@@ -179,6 +241,7 @@ def create_admin_router(
     auth_model: Any | None = None,
     demo_mode: bool = False,
     secure_cookies: bool | None = None,
+    theme: str = "matrix",
 ) -> APIRouter:
     # Initialize rate limiter (e.g., 5 login attempts per minute)
     login_limiter = RateLimiter(rate=5, per=60)
@@ -286,11 +349,16 @@ def create_admin_router(
             return JSONResponse(result)
         return RedirectResponse(url=fallback_url, status_code=303)
 
+    _base_template = (
+        "layouts/base_clean.html" if theme == "clean" else "layouts/base.html"
+    )
+
     def get_common_context(request: Request) -> dict[str, Any]:
         """Get common template context."""
         return {
             "request": request,
             "admin_title": title,
+            "base_template": _base_template,
             "models": sorted(
                 registry.all(),
                 key=lambda config: (
@@ -870,6 +938,125 @@ def create_admin_router(
             headers={"Content-Disposition": f"attachment; filename={filename}"},
         )
 
+    @router.get("/{model}/export/xlsx", name="admin:export_xlsx")
+    async def export_xlsx(
+        request: Request,
+        model: str,
+        search: str | None = Query(None),
+        session: "AsyncSession" = (
+            Depends(session_dependency) if session_dependency else None
+        ),
+    ):
+        """Export filtered data as Excel (.xlsx)."""
+        try:
+            model_config = registry.validate_model_access(model)
+        except Exception:
+            raise HTTPException(status_code=403, detail="Model not registered")
+
+        current_user = await enforce_permission(
+            request, session, model_config, "export"
+        )
+        query_transform = scoped_query_transform(
+            model_config, request, session, current_user
+        )
+
+        reserved_params = {"page", "per_page", "search"}
+        filters = {
+            k: v for k, v in request.query_params.items() if k not in reserved_params
+        }
+
+        if hasattr(model_config.model, "__tablename__"):
+            fields = model_config.list_display or [
+                c.key for c in model_config.model.__table__.columns
+            ]
+        else:
+            fields = model_config.list_display or [
+                f.name for f in walker.walk(model_config.model)
+            ]
+
+        try:
+            import openpyxl  # noqa: F401
+        except ImportError:
+            raise HTTPException(
+                status_code=501,
+                detail=(
+                    "Excel export requires openpyxl. "
+                    "Install it with: pip install openpyxl"
+                ),
+            )
+
+        from fastapi.responses import Response
+
+        all_rows: list[Any] = []
+
+        if session and hasattr(model_config.model, "__tablename__"):
+            crud = CRUDBase(model_config.model)
+            page = 1
+            while True:
+                rows, _ = await crud.list(
+                    session,
+                    page=page,
+                    per_page=500,
+                    search=search,
+                    search_fields=model_config.searchable_fields,
+                    filters=filters,
+                    order_by=model_config.ordering,
+                    query_transform=query_transform,
+                )
+                if not rows:
+                    break
+                all_rows.extend(rows)
+                page += 1
+
+        try:
+            import openpyxl
+            from openpyxl.styles import Font, PatternFill, Alignment
+            import io as _io
+
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            ws.title = model_config.name[:31]
+
+            header_font = Font(bold=True, color="FFFFFF")
+            header_fill = PatternFill(
+                start_color="1E3A5F", end_color="1E3A5F", fill_type="solid"
+            )
+            for col_idx, field in enumerate(fields, start=1):
+                cell = ws.cell(
+                    row=1,
+                    column=col_idx,
+                    value=field.replace("_", " ").title(),
+                )
+                cell.font = header_font
+                cell.fill = header_fill
+                cell.alignment = Alignment(horizontal="center", vertical="center")
+                ws.column_dimensions[cell.column_letter].width = max(
+                    len(field) + 4, 12
+                )
+
+            for row_idx, row in enumerate(all_rows, start=2):
+                for col_idx, field in enumerate(fields, start=1):
+                    value = getattr(row, field, None)
+                    if hasattr(value, "isoformat"):
+                        value = value.isoformat()
+                    ws.cell(row=row_idx, column=col_idx, value=value)
+
+            ws.freeze_panes = "A2"
+            buf = _io.BytesIO()
+            wb.save(buf)
+            xlsx_bytes = buf.getvalue()
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Excel export failed: {exc}")
+
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+        filename = f"{model_config.name}_export_{timestamp}.xlsx"
+
+        return Response(
+            content=xlsx_bytes,
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": f"attachment; filename={filename}"},
+        )
+
     # ==================== Create View ====================
 
     @router.get("/{model}/create", response_class=HTMLResponse, name="admin:create")
@@ -920,6 +1107,10 @@ def create_admin_router(
         fragment_token = signer.create_fragment_token(model, action="load_fragment")
         fragment_url = f"{prefix}/fragments?token={fragment_token}"
 
+        m2m_choices: dict = {}
+        if session:
+            m2m_choices = await _load_m2m_choices(session, fields, registry)
+
         context = {
             **get_common_context(request),
             "model_config": model_config,
@@ -933,6 +1124,8 @@ def create_admin_router(
             "current_user": current_user,
             "detail_panels": model_config.detail_panels,
             "delete_token": signer.sign({"model": model, "action": "delete"}),
+            "m2m_choices": m2m_choices,
+            "m2m_values": {},
         }
 
         return templates.TemplateResponse("pages/edit.html", context)
@@ -987,6 +1180,7 @@ def create_admin_router(
 
             # Convert string values to appropriate types based on model
             create_data = {}
+            m2m_fields_data: dict[str, list[str]] = {}
             fields = extract_sqlalchemy_fields(
                 model_config.model,
                 registry=registry,
@@ -994,6 +1188,9 @@ def create_admin_router(
                 widgets=model_config.widgets,
             )
             for field in fields:
+                if field.field_type == FieldType.MANY_TO_MANY:
+                    m2m_fields_data[field.name] = form_data.getlist(field.name)
+                    continue
                 if field.name in raw_data:
                     value = raw_data[field.name]
                     # Convert boolean strings to actual booleans
@@ -1021,6 +1218,43 @@ def create_admin_router(
 
             try:
                 created_record = await crud.create(session, obj_in=create_data)
+
+                # Set M2M relationships after record exists
+                if m2m_fields_data:
+                    from sqlalchemy import select as _sa_select
+
+                    for rel_name, selected_ids in m2m_fields_data.items():
+                        if not hasattr(created_record, rel_name):
+                            continue
+                        target_config = next(
+                            (
+                                c
+                                for c in registry.all()
+                                if hasattr(c.model, "__table__")
+                                and c.model.__name__
+                                == next(
+                                    (
+                                        f.target_model
+                                        for f in fields
+                                        if f.name == rel_name
+                                    ),
+                                    None,
+                                )
+                            ),
+                            None,
+                        )
+                        if target_config and selected_ids:
+                            res = await session.execute(
+                                _sa_select(target_config.model).where(
+                                    target_config.model.id.in_(
+                                        [int(i) for i in selected_ids if i]
+                                    )
+                                )
+                            )
+                            related_objs = res.scalars().all()
+                            setattr(created_record, rel_name, list(related_objs))
+                        else:
+                            setattr(created_record, rel_name, [])
 
                 # Audit Log
                 if audit_logger:
@@ -1106,7 +1340,6 @@ def create_admin_router(
             )
 
         # Fetch actual record data from database
-        values = {"id": id}
         if session and hasattr(model_config.model, "__tablename__"):
             crud = CRUDBase(model_config.model)
             current_user = await enforce_permission(
@@ -1127,9 +1360,22 @@ def create_admin_router(
                     status_code=HTTP_404_NOT_FOUND, detail="Record not found"
                 )
 
-            # Convert to dict for template
-            values = {field.name: getattr(record, field.name, None) for field in fields}
+            # Convert scalar columns to dict; collect M2M current IDs separately
+            m2m_values: dict[str, list[str]] = {}
+            values = {}
+            for f in fields:
+                if f.field_type == FieldType.MANY_TO_MANY:
+                    related = getattr(record, f.name, []) or []
+                    m2m_values[f.name] = [str(getattr(r, "id", "")) for r in related]
+                else:
+                    values[f.name] = getattr(record, f.name, None)
             values["id"] = id
+
+            m2m_choices = await _load_m2m_choices(session, fields, registry)
+        else:
+            values = {"id": id}
+            m2m_values = {}
+            m2m_choices = {}
 
         # Generate signed fragment URL
         fragment_token = signer.create_fragment_token(
@@ -1151,6 +1397,8 @@ def create_admin_router(
             "detail_panels": model_config.detail_panels,
             "record": locals().get("record"),
             "delete_token": signer.sign({"model": model, "action": "delete"}),
+            "m2m_choices": m2m_choices,
+            "m2m_values": m2m_values,
         }
 
         return templates.TemplateResponse("pages/edit.html", context)
@@ -1204,6 +1452,7 @@ def create_admin_router(
 
             # Convert string values to appropriate types based on model
             update_data = {}
+            m2m_fields_data: dict[str, list[str]] = {}
             fields = extract_sqlalchemy_fields(
                 model_config.model,
                 registry=registry,
@@ -1211,6 +1460,9 @@ def create_admin_router(
                 widgets=model_config.widgets,
             )
             for field in fields:
+                if field.field_type == FieldType.MANY_TO_MANY:
+                    m2m_fields_data[field.name] = form_data.getlist(field.name)
+                    continue
                 if field.name in raw_data:
                     value = raw_data[field.name]
                     # Convert boolean strings to actual booleans
@@ -1261,6 +1513,42 @@ def create_admin_router(
                     raise HTTPException(
                         status_code=HTTP_404_NOT_FOUND, detail="Record not found"
                     )
+
+                # Update M2M relationships
+                if m2m_fields_data:
+                    from sqlalchemy import select as _sa_select
+
+                    for rel_name, selected_ids in m2m_fields_data.items():
+                        if not hasattr(updated_record, rel_name):
+                            continue
+                        target_config = next(
+                            (
+                                c
+                                for c in registry.all()
+                                if c.model.__name__
+                                == next(
+                                    (
+                                        f.target_model
+                                        for f in fields
+                                        if f.name == rel_name
+                                    ),
+                                    None,
+                                )
+                            ),
+                            None,
+                        )
+                        if target_config and selected_ids:
+                            res = await session.execute(
+                                _sa_select(target_config.model).where(
+                                    target_config.model.id.in_(
+                                        [int(i) for i in selected_ids if i]
+                                    )
+                                )
+                            )
+                            related_objs = res.scalars().all()
+                            setattr(updated_record, rel_name, list(related_objs))
+                        else:
+                            setattr(updated_record, rel_name, [])
 
                 # Audit Log
                 if audit_logger:

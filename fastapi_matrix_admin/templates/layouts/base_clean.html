@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ admin_title }} - Admin{% endblock %}</title>
+    <meta name="description" content="Admin panel" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS via CDN (Zero Node.js) -->
+    <script src="https://cdn.tailwindcss.com" nonce="{{ csp_nonce }}"></script>
+    <script nonce="{{ csp_nonce }}">
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        border: 'hsl(214.3 31.8% 91.4%)',
+                        input: 'hsl(214.3 31.8% 91.4%)',
+                        ring: 'hsl(221.2 83.2% 53.3%)',
+                        background: 'hsl(0 0% 100%)',
+                        foreground: 'hsl(222.2 84% 4.9%)',
+                        primary: {
+                            DEFAULT: 'hsl(221.2 83.2% 53.3%)',
+                            foreground: 'hsl(210 40% 98%)',
+                        },
+                        secondary: {
+                            DEFAULT: 'hsl(210 40% 96.1%)',
+                            foreground: 'hsl(222.2 47.4% 11.2%)',
+                        },
+                        destructive: {
+                            DEFAULT: 'hsl(0 84.2% 60.2%)',
+                            foreground: 'hsl(210 40% 98%)',
+                        },
+                        muted: {
+                            DEFAULT: 'hsl(210 40% 96.1%)',
+                            foreground: 'hsl(215.4 16.3% 46.9%)',
+                        },
+                        accent: {
+                            DEFAULT: 'hsl(210 40% 96.1%)',
+                            foreground: 'hsl(222.2 47.4% 11.2%)',
+                        },
+                        card: {
+                            DEFAULT: 'hsl(0 0% 100%)',
+                            foreground: 'hsl(222.2 84% 4.9%)',
+                        },
+                    },
+                    borderRadius: {
+                        lg: '0.5rem',
+                        md: 'calc(0.5rem - 2px)',
+                        sm: 'calc(0.5rem - 4px)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style nonce="{{ csp_nonce }}">
+        * {
+            transition-property: color, background-color, border-color, opacity, box-shadow;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 120ms;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        .admin-sidebar {
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .admin-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .admin-panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+        }
+
+        .admin-panel-muted {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+        }
+
+        .admin-nav-active {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+        }
+
+        .admin-nav-link {
+            border: 1px solid transparent;
+            color: #475569;
+        }
+
+        .admin-nav-link:hover {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            color: #0f172a;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .htmx-indicator { opacity: 0; transition: opacity 200ms ease-in; }
+        .htmx-request .htmx-indicator { opacity: 1; }
+
+        /* Override emerald/matrix colors for clean theme content */
+        .matrix-panel { background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .matrix-panel-strong { background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+        .matrix-shell::before, .matrix-shell::after { display: none; }
+        .matrix-title { text-shadow: none; letter-spacing: -0.02em; }
+        .matrix-kbd { border: 1px solid #e2e8f0; background: #f8fafc; color: #475569; }
+
+        /* Text color overrides for clean theme */
+        .text-emerald-100, .text-emerald-100\/80 { color: #0f172a !important; }
+        .text-emerald-400, .text-emerald-300 { color: #2563eb !important; }
+        .text-emerald-500, .text-emerald-600 { color: #64748b !important; }
+        .text-emerald-700, .text-emerald-800 { color: #94a3b8 !important; }
+        .text-white { color: #0f172a !important; }
+
+        /* Border overrides */
+        .border-emerald-500\/10, .border-emerald-500\/20, .border-emerald-500\/30 { border-color: #e2e8f0 !important; }
+        .border-emerald-900 { border-color: #e2e8f0 !important; }
+
+        /* Background overrides */
+        .bg-emerald-950\/20, .bg-emerald-950\/30, .bg-black\/80, .bg-black { background: #f8fafc !important; }
+        .bg-black\/80 { background: rgba(248,250,252,0.95) !important; }
+        .bg-emerald-500\/10 { background: #eff6ff !important; }
+        .bg-emerald-500\/20, .bg-emerald-900\/50 { background: #dbeafe !important; }
+
+        /* Button style overrides */
+        .bg-emerald-500\/10.border-emerald-500\/30 { background: #eff6ff !important; border-color: #bfdbfe !important; }
+        .hover\:bg-emerald-500\/20:hover { background: #dbeafe !important; }
+
+        /* Table row hover */
+        .hover\:bg-emerald-950\/30:hover { background: #f8fafc !important; }
+
+        /* Input overrides */
+        .bg-black.border-emerald-500\/20,
+        .bg-black.border-emerald-900 {
+            background: #fff !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+
+        /* Placeholder overrides */
+        .placeholder\:text-emerald-800::placeholder { color: #94a3b8 !important; }
+        .placeholder\:text-emerald-900\/50::placeholder { color: #94a3b8 !important; }
+
+        /* Focus ring */
+        .focus\:border-emerald-500\/50:focus { border-color: #93c5fd !important; }
+        .focus\:ring-emerald-500\/20:focus { --tw-ring-color: rgba(147,197,253,0.3) !important; }
+
+        /* Animate pulse for status dot */
+        .bg-emerald-500.animate-pulse { background: #2563eb !important; }
+
+        /* Clean action badges */
+        .matrix-kbd { font-family: 'Inter', sans-serif; font-size: 0.7rem; }
+
+        /* Red destructive stays red */
+        .bg-red-500\/10, .bg-red-950\/90 { background: #fef2f2 !important; }
+        .border-red-500\/30 { border-color: #fecaca !important; }
+        .text-red-400, .text-red-100 { color: #dc2626 !important; }
+
+        /* Blue stays blue */
+        .bg-blue-500\/10 { background: #eff6ff !important; }
+        .border-blue-500\/30 { border-color: #bfdbfe !important; }
+        .text-blue-400, .text-blue-100 { color: #2563eb !important; }
+
+        @keyframes toast-in {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+
+    {% block head %}{% endblock %}
+</head>
+
+<body class="min-h-screen antialiased">
+    <div class="flex min-h-screen" x-data="{ mobileNav: false }">
+        <!-- Sidebar - Clean Theme -->
+        <aside
+            class="admin-sidebar fixed inset-y-0 left-0 z-50 w-64 md:static md:block"
+            :class="mobileNav ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
+            <!-- Branding Header -->
+            <div class="flex h-16 items-center border-b border-slate-200 px-5">
+                <a href="{{ url_for('admin:index') }}" class="flex items-center space-x-3 group">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+                        <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-slate-900 text-sm tracking-tight">{{ admin_title }}</span>
+                </a>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="p-3 space-y-0.5">
+                <!-- Dashboard Link -->
+                <a href="{{ url_for('admin:index') }}"
+                    class="flex items-center space-x-2.5 rounded-md px-3 py-2 text-sm transition-all {% if current_model is none %}admin-nav-active font-medium{% else %}admin-nav-link{% endif %}">
+                    <svg class="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+
+                {% if models %}
+                <div class="pt-3 pb-1 px-3">
+                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Models</span>
+                </div>
+
+                {% for model_config in models %}
+                <a href="{{ url_for('admin:list', model=model_config.name) }}"
+                    class="flex items-center justify-between rounded-md px-3 py-2 text-sm transition-all {% if current_model == model_config.name %}admin-nav-active font-medium{% else %}admin-nav-link{% endif %}">
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                        </svg>
+                        <span>{{ model_config.menu_label or model_config.name }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+                {% else %}
+                <p class="px-3 py-2 text-sm text-slate-400">No models registered</p>
+                {% endif %}
+            </nav>
+        </aside>
+
+        <div x-show="mobileNav" x-transition.opacity class="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm md:hidden"
+            @click="mobileNav = false"></div>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto bg-slate-50">
+            <!-- Top Bar - Clean Theme -->
+            <header class="admin-header sticky top-0 z-40">
+                <div class="flex h-16 items-center justify-between px-6">
+                    <div class="flex items-center space-x-4">
+                        <button
+                            class="md:hidden inline-flex items-center justify-center rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all"
+                            @click="mobileNav = true">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        {% block breadcrumb %}{% endblock %}
+                    </div>
+
+                    <div class="flex items-center space-x-3">
+                        <div class="hidden xl:flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5">
+                            <span class="text-xs font-mono bg-slate-100 border border-slate-200 text-slate-500 rounded px-1.5 py-0.5">/</span>
+                            <span class="text-xs text-slate-400">Search</span>
+                            <span class="text-xs font-mono bg-slate-100 border border-slate-200 text-slate-500 rounded px-1.5 py-0.5">N</span>
+                            <span class="text-xs text-slate-400">Create</span>
+                        </div>
+                        {% if current_user %}
+                        <div class="flex items-center space-x-2 rounded-md border border-slate-200 px-3 py-1.5">
+                            <span class="text-xs text-slate-400">Signed in as</span>
+                            <span class="text-sm font-medium text-slate-700">{{ current_user.username }}</span>
+                        </div>
+                        <a href="{{ url_for('admin:logout') }}"
+                            class="text-xs text-slate-500 hover:text-slate-800 transition-colors">Logout</a>
+                        {% endif %}
+                        <div class="htmx-indicator">
+                            <svg class="h-4 w-4 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24" stroke-width="3">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" />
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="p-6 lg:p-8">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+
+        <!-- Toast Container -->
+        <div id="toast-container" class="fixed top-4 right-4 z-[100] space-y-3"></div>
+
+        <!-- Global Create Modal -->
+        <div id="global-create-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black/40 backdrop-blur-sm">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="admin-panel relative rounded-xl shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between p-5 border-b border-slate-200">
+                        <h3 class="text-base font-semibold text-slate-900">Select model to create</h3>
+                        <button type="button" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg w-8 h-8 inline-flex justify-center items-center transition-colors" onclick="closeCreateModal()">
+                            <svg class="w-4 h-4" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-4 space-y-2">
+                        {% if models %}
+                            {% for model_config in models %}
+                            <a href="{{ url_for('admin:create', model=model_config.name) }}" class="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:bg-slate-50 hover:border-blue-200 transition-all">
+                                <span class="text-sm font-medium text-slate-700">{{ model_config.menu_label or model_config.name }}</span>
+                                <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-sm text-slate-400 text-center py-4">No models registered.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HTMX (vendored) -->
+    <script src="{{ url_for('admin:static', path='htmx.min.js') }}" nonce="{{ csp_nonce }}"></script>
+
+    <!-- Alpine.js (vendored) -->
+    <script src="{{ url_for('admin:static', path='alpine.min.js') }}" defer nonce="{{ csp_nonce }}"></script>
+
+    <script nonce="{{ csp_nonce }}">
+        document.body.addEventListener('htmx:configRequest', function (evt) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (csrfToken) {
+                evt.detail.headers['X-CSRF-Token'] = csrfToken.content;
+            }
+        });
+
+        function openCreateModal() {
+            const modal = document.getElementById('global-create-modal');
+            if (modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+        }
+
+        function closeCreateModal() {
+            const modal = document.getElementById('global-create-modal');
+            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            const styles = {
+                success: 'border-green-200 bg-white text-green-800',
+                error: 'border-red-200 bg-white text-red-800',
+                info: 'border-blue-200 bg-white text-blue-800'
+            };
+            const icons = {
+                success: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />',
+                error: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />',
+                info: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />'
+            };
+            toast.className = `flex items-center space-x-3 rounded-lg border ${styles[type]} p-4 shadow-md`;
+            toast.style.cssText = "animation: toast-in 0.3s ease-out; min-width: 280px;";
+            toast.innerHTML = `<svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">${icons[type]}</svg><span class="text-sm font-medium">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.transition = 'all 0.3s ease-out';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            const isInput = event.target.matches('input, textarea, select') || event.target.isContentEditable;
+            if (isInput) { if (event.key === 'Escape') event.target.blur(); return; }
+            if (event.key === 'Escape') closeCreateModal();
+            if (event.key === '/' || event.key === '?') {
+                const searchInput = document.getElementById('search-input') || document.querySelector('input[type="search"]');
+                if (searchInput) { event.preventDefault(); searchInput.focus(); }
+            }
+            if (event.key.toLowerCase() === 'n') { event.preventDefault(); openCreateModal(); }
+        });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

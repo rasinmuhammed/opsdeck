@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+{% extends base_template %}
 {% import "components/buttons.html" as buttons %}
 {% import "components/inputs.html" as inputs %}
 
@@ -213,10 +213,44 @@
                         {% endif %}
                     </label>
 
-                    {# Relationship (Smart Select) #}
+                    {# Relationship (Smart Select - FK) #}
                     {% elif field.field_type.value == "relationship" %}
                     {{ inputs.relationship_input(field, values.get(field.name), errors.get(field.name)[0] if
                     errors.get(field.name) else None) }}
+
+                    {# Many-to-Many Multi-Select #}
+                    {% elif field.field_type.value == "many_to_many" %}
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-mono font-semibold text-emerald-400">{{ field.title }}</span>
+                            <span class="text-xs font-mono text-emerald-700">Hold Ctrl/Cmd to select multiple</span>
+                        </div>
+                        {% set current_ids = m2m_values.get(field.name, []) %}
+                        {% set choices = m2m_choices.get(field.name, []) %}
+                        {% if choices %}
+                        <select name="{{ field.name }}" multiple
+                            class="w-full rounded-lg bg-black border border-emerald-500/20 text-emerald-100 font-mono text-sm focus:outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                            style="min-height: 120px; padding: 0.25rem;">
+                            {% for opt_id, opt_label in choices %}
+                            <option value="{{ opt_id }}"
+                                {% if opt_id in current_ids %}selected{% endif %}
+                                style="padding: 0.4rem 0.75rem;">
+                                {{ opt_label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <p class="text-xs font-mono text-emerald-700">
+                            {{ current_ids|length }} of {{ choices|length }} selected
+                        </p>
+                        {% else %}
+                        <p class="text-xs font-mono text-emerald-700 px-3 py-2 border border-emerald-500/10 rounded-lg">
+                            No {{ field.title | lower }} available. Create some first.
+                        </p>
+                        {% endif %}
+                        {% if errors.get(field.name) %}
+                        <p class="text-xs font-mono text-red-400 mt-1">{{ errors.get(field.name)[0] }}</p>
+                        {% endif %}
+                    </div>
 
                     {# JSON Input #}
                     {% elif field.field_type.value == "json" %}

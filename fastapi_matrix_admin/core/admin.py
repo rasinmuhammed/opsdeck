@@ -102,6 +102,7 @@ class MatrixAdmin:
         audit_model: Type["DeclarativeBase"] | None = None,
         demo_mode: bool = False,
         secure_cookies: bool | None = None,
+        theme: str = "matrix",
     ):
         self.app = app
         self.title = title
@@ -110,6 +111,7 @@ class MatrixAdmin:
         self.audit_model = audit_model
         self.demo_mode = demo_mode
         self.secure_cookies = secure_cookies
+        self.theme = theme
 
         # Initialize core components
         self.registry = AdminRegistry()
@@ -169,6 +171,7 @@ class MatrixAdmin:
             auth_model=self.auth_model,
             demo_mode=self.demo_mode,
             secure_cookies=self.secure_cookies,
+            theme=self.theme,
         )
         self.app.include_router(router, prefix=self.prefix)
 

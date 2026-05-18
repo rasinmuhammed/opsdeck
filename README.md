@@ -1,5 +1,7 @@
 # FastAPI Matrix Admin
 
+**[Live demo →](https://fastapi-matrix-admin.vercel.app)** · [Docs](https://rasinmuhammed.github.io/fastapi-matrix-admin/) · [Migrating from fastapi-admin?](docs/recipes/migration-from-fastapi-admin.md)
+
 FastAPI Matrix Admin is a FastAPI-native admin for async SQLAlchemy teams. It is built for developers who want the first admin screen to feel magnetic, but still need the operational basics to be explicit, scoped, auditable, and easy to integrate.
 
 ## Why developers pick it
@@ -81,12 +83,26 @@ admin.add_view(UserAdmin)
 
 - CRUD for registered models
 - Auto-discovery for SQLAlchemy declarative models
-- Search, pagination, filters, and CSV export
+- Search, pagination, filters, CSV and Excel export
+- Many-to-many relationship handling with multi-select widgets
 - Relationship search inputs for foreign keys
 - Model-level permissions and request-aware row scoping
 - Bulk actions and custom action hooks
 - Optional audit logging with an explicit `audit_model`
 - Environment-aware session cookie behavior
+- Two themes: `theme="matrix"` (default) and `theme="clean"` for neutral corporate UIs
+
+## Excel export
+
+Excel export requires `openpyxl`:
+
+```bash
+pip install fastapi-matrix-admin[excel]
+# or
+pip install openpyxl
+```
+
+Once installed, an XLSX button appears automatically in the list view alongside the CSV button. No configuration needed.
 
 ## Why this matters in the age of AI agents
 

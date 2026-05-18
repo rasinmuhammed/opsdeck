@@ -39,6 +39,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+excel = [
+    "openpyxl>=3.1",
+]
 dev = [
     "pytest>=7.0",
     "pytest-asyncio>=0.24,<0.26",
