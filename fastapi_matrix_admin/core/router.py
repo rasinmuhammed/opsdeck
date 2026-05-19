@@ -382,7 +382,7 @@ def create_admin_router(
             "error": request.query_params.get("error"),
             "demo_mode": demo_mode,
         }
-        return templates.TemplateResponse("pages/login.html", context)
+        return templates.TemplateResponse(request, "pages/login.html", context)
 
     @router.post("/login", response_class=HTMLResponse, name="admin:login_submit")
     async def login_submit(
@@ -408,7 +408,7 @@ def create_admin_router(
                 "error": "Too many login attempts. Please try again later.",
             }
             return templates.TemplateResponse(
-                "pages/login.html", context, status_code=429
+                request, "pages/login.html", context, status_code=429
             )
 
         form_data = await request.form()
@@ -438,6 +438,7 @@ def create_admin_router(
             await asyncio.sleep(0.5)
 
             return templates.TemplateResponse(
+                request,
                 "pages/login.html",
                 {
                     "request": request,
@@ -451,6 +452,7 @@ def create_admin_router(
 
         if hasattr(user, "is_active") and not user.is_active:
             return templates.TemplateResponse(
+                request,
                 "pages/login.html",
                 {
                     "request": request,
@@ -655,13 +657,19 @@ def create_admin_router(
         except (PermissionError, OSError):
             boot_time = "Unavailable"
 
+        try:
+            _disk_path = "C:\\" if platform.system() == "Windows" else "/"
+            disk_usage_pct = psutil.disk_usage(_disk_path).percent
+        except (PermissionError, OSError):
+            disk_usage_pct = 0
+
         system_stats = {
             "platform": f"{platform.system()} {platform.release()}",
             "processor": platform.processor(),
             "cpu_usage": psutil.cpu_percent(interval=None),
             "ram_usage": psutil.virtual_memory().percent,
             "ram_total": f"{round(psutil.virtual_memory().total / (1024**3), 2)} GB",
-            "disk_usage": psutil.disk_usage("/").percent,
+            "disk_usage": disk_usage_pct,
             "boot_time": boot_time,
         }
 
@@ -693,7 +701,7 @@ def create_admin_router(
             "current_user": current_user,
         }
 
-        return templates.TemplateResponse("pages/index.html", context)
+        return templates.TemplateResponse(request, "pages/index.html", context)
 
     # ==================== List View ====================
 
@@ -843,7 +851,7 @@ def create_admin_router(
             ],
         }
 
-        return templates.TemplateResponse("pages/list.html", context)
+        return templates.TemplateResponse(request, "pages/list.html", context)
 
     @router.get("/{model}/export/csv", name="admin:export_csv")
     async def export_csv(
@@ -1126,7 +1134,7 @@ def create_admin_router(
             "m2m_values": {},
         }
 
-        return templates.TemplateResponse("pages/edit.html", context)
+        return templates.TemplateResponse(request, "pages/edit.html", context)
 
     @router.post(
         "/{model}/create", response_class=HTMLResponse, name="admin:create_submit"
@@ -1292,7 +1300,7 @@ def create_admin_router(
                     "detail_panels": model_config.detail_panels,
                     "delete_token": signer.sign({"model": model, "action": "delete"}),
                 }
-                return templates.TemplateResponse("pages/edit.html", context)
+                return templates.TemplateResponse(request, "pages/edit.html", context)
 
         return RedirectResponse(
             url=str(request.url_for("admin:list", model=model)),
@@ -1399,7 +1407,7 @@ def create_admin_router(
             "m2m_values": m2m_values,
         }
 
-        return templates.TemplateResponse("pages/edit.html", context)
+        return templates.TemplateResponse(request, "pages/edit.html", context)
 
     @router.post("/{model}/{id}", name="admin:update")
     async def update_submit(
@@ -1873,6 +1881,8 @@ def create_admin_router(
             "csp_nonce": getattr(request.state, "csp_nonce", ""),
         }
 
-        return templates.TemplateResponse("fragments/form_fields.html", context)
+        return templates.TemplateResponse(
+            request, "fragments/form_fields.html", context
+        )
 
     return router

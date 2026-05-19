@@ -12,9 +12,9 @@ class RateLimiter:
     def __init__(self, rate: int, per: int):
         self.rate = rate
         self.per = per
-        self.buckets: Dict[
-            str, Tuple[float, float]
-        ] = {}  # key -> (tokens, last_update)
+        self.buckets: Dict[str, Tuple[float, float]] = (
+            {}
+        )  # key -> (tokens, last_update)
 
     def accumulate(self, key: str):
         now = time.time()
