@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rasinmuhammed.github.io/opsdeck/sitemap.xml
