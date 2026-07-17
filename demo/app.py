@@ -1,5 +1,5 @@
 """
-Live demo for Vercel - FastAPI Matrix Admin.
+Live demo for Vercel - OpsDeck.
 Showcases Matrix UI theme and auto_discover feature
 """
 
@@ -10,11 +10,11 @@ from sqlalchemy import String, Integer, Boolean, Text, Float, ForeignKey, select
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-from fastapi_matrix_admin import MatrixAdmin
-from fastapi_matrix_admin.audit.models import AuditLog as AuditLogMixin
+from opsdeck import OpsDeck
+from opsdeck.audit.models import AuditLog as AuditLogMixin
 
 # Import Auth components
-from fastapi_matrix_admin.auth.models import AdminUserMixin, pwd_context
+from opsdeck.auth.models import AdminUserMixin, pwd_context
 
 
 # SQLAlchemy Base
@@ -239,7 +239,7 @@ async def lifespan(app: FastAPI):
 
 # Create FastAPI app with lifespan
 app = FastAPI(
-    title="FastAPI Matrix Admin - Live Demo",
+    title="OpsDeck - Live Demo",
     description="Showcasing Matrix UI and Auto-Discovery",
     version="1.0.0",
     lifespan=lifespan,
@@ -253,11 +253,11 @@ async def root():
 
 
 # Initialize admin
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="demo-live-key-for-render-deployment",
-    title="FastAPI Matrix Admin Demo",
+    title="OpsDeck Demo",
     demo_mode=True,
 )
 

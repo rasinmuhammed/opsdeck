@@ -16,9 +16,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from fastapi_matrix_admin import MatrixAdmin
-from fastapi_matrix_admin.auth.models import AdminUserMixin, SessionData
-from fastapi_matrix_admin.audit.models import AuditLog, AuditLogger
+from opsdeck import OpsDeck
+from opsdeck.auth.models import AdminUserMixin, SessionData
+from opsdeck.audit.models import AuditLog, AuditLogger
 
 
 # --- Test Models ---
@@ -89,7 +89,7 @@ def app_with_db(async_engine):
     """Create FastAPI app with database."""
     app = FastAPI()
 
-    admin = MatrixAdmin(
+    admin = OpsDeck(
         app,
         engine=async_engine,
         secret_key="test-secret-key-for-testing",
@@ -120,7 +120,7 @@ class TestDatabaseCRUD:
     @pytest.mark.asyncio
     async def test_create_record(self, async_session):
         """Test creating a record."""
-        from fastapi_matrix_admin.core.crud import CRUDBase
+        from opsdeck.core.crud import CRUDBase
 
         crud = CRUDBase(TestUser)
 
@@ -136,7 +136,7 @@ class TestDatabaseCRUD:
     @pytest.mark.asyncio
     async def test_list_with_pagination(self, async_session):
         """Test list with pagination."""
-        from fastapi_matrix_admin.core.crud import CRUDBase
+        from opsdeck.core.crud import CRUDBase
 
         crud = CRUDBase(TestUser)
 
@@ -160,7 +160,7 @@ class TestDatabaseCRUD:
     @pytest.mark.asyncio
     async def test_search(self, async_session):
         """Test search functionality."""
-        from fastapi_matrix_admin.core.crud import CRUDBase
+        from opsdeck.core.crud import CRUDBase
 
         crud = CRUDBase(TestUser)
 
@@ -188,7 +188,7 @@ class TestDatabaseCRUD:
     @pytest.mark.asyncio
     async def test_update_record(self, async_session):
         """Test updating a record."""
-        from fastapi_matrix_admin.core.crud import CRUDBase
+        from opsdeck.core.crud import CRUDBase
 
         crud = CRUDBase(TestUser)
 
@@ -210,7 +210,7 @@ class TestDatabaseCRUD:
     @pytest.mark.asyncio
     async def test_delete_record(self, async_session):
         """Test deleting a record."""
-        from fastapi_matrix_admin.core.crud import CRUDBase
+        from opsdeck.core.crud import CRUDBase
 
         crud = CRUDBase(TestUser)
 

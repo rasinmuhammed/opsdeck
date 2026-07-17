@@ -36,13 +36,13 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-from fastapi_matrix_admin.core.registry import AdminRegistry, ModelConfig
-from fastapi_matrix_admin.core.security import URLSigner, CSPMiddleware
-from fastapi_matrix_admin.core.integrator import SchemaWalker
-from fastapi_matrix_admin.core.router import create_admin_router
-from fastapi_matrix_admin.core.database import DatabaseManager
-from fastapi_matrix_admin.core.discovery import AutoDiscovery
-from fastapi_matrix_admin.core.views import ModelAdmin
+from opsdeck.core.registry import AdminRegistry, ModelConfig
+from opsdeck.core.security import URLSigner, CSPMiddleware
+from opsdeck.core.integrator import SchemaWalker
+from opsdeck.core.router import create_admin_router
+from opsdeck.core.database import DatabaseManager
+from opsdeck.core.discovery import AutoDiscovery
+from opsdeck.core.views import ModelAdmin
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import DeclarativeBase
@@ -54,23 +54,23 @@ logger = logging.getLogger(__name__)
 
 
 # Public API
-__all__ = ["MatrixAdmin"]
+__all__ = ["OpsDeck"]
 # Package paths
 PACKAGE_DIR = Path(__file__).parent.parent
 TEMPLATES_DIR = PACKAGE_DIR / "templates"
 STATICS_DIR = PACKAGE_DIR / "statics"
 
 
-class MatrixAdmin:
+class OpsDeck:
     """
     The main admin interface class for FastAPI.
 
     Usage:
         from fastapi import FastAPI
-        from fastapi_matrix_admin import MatrixAdmin
+        from opsdeck import OpsDeck
 
         app = FastAPI()
-        admin = MatrixAdmin(app, secret_key="your-32-char-secret-key")
+        admin = OpsDeck(app, secret_key="your-32-char-secret-key")
 
         # Register your models
         admin.register(User)
@@ -141,7 +141,7 @@ class MatrixAdmin:
         self._mount_statics()
 
         # Initialize audit logger
-        from fastapi_matrix_admin.audit.models import AuditLogger
+        from opsdeck.audit.models import AuditLogger
 
         self.audit_logger = AuditLogger(audit_model) if audit_model else None
 
@@ -307,7 +307,7 @@ class MatrixAdmin:
         """
         if not self.db_manager:
             raise RuntimeError(
-                "Database engine not configured. Pass engine parameter to MatrixAdmin."
+                "Database engine not configured. Pass engine parameter to OpsDeck."
             )
 
         if self._session_dependency is None:

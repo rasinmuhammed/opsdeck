@@ -1,5 +1,5 @@
 """
-Simple Test Application for FastAPI Matrix Admin
+Simple Test Application for OpsDeck
 Demonstrates basic usage with SQLAlchemy models
 """
 
@@ -10,8 +10,8 @@ from sqlalchemy import String, Integer, Boolean, Float, ForeignKey
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-from fastapi_matrix_admin import MatrixAdmin, AdminAction
-from fastapi_matrix_admin.auth.models import AdminUserMixin, pwd_context
+from opsdeck import OpsDeck, AdminAction
+from opsdeck.auth.models import AdminUserMixin, pwd_context
 
 
 # SQLAlchemy Base
@@ -135,7 +135,7 @@ async def lifespan(app: FastAPI):
 
 # Create FastAPI app
 app = FastAPI(
-    title="Test App - FastAPI Matrix Admin",
+    title="Test App - OpsDeck",
     lifespan=lifespan,
 )
 
@@ -145,8 +145,8 @@ async def root():
     return RedirectResponse(url="/admin")
 
 
-# Initialize Matrix Admin
-admin = MatrixAdmin(
+# Initialize OpsDeck
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="test-secret-key-min-32-characters-long",

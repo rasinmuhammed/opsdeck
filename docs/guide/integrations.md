@@ -2,7 +2,7 @@
 
 ## Authentication
 
-Use your own SQLAlchemy admin user model by passing `auth_model=...` to `MatrixAdmin`.
+Use your own SQLAlchemy admin user model by passing `auth_model=...` to `OpsDeck`.
 
 ## Audit logging
 
@@ -18,4 +18,4 @@ SQLModel projects that expose SQLAlchemy declarative models can often use the qu
 
 ## File and background workflows
 
-Use custom `AdminAction` handlers to trigger your own storage, background jobs, or internal service calls. Matrix Admin does not impose a separate job system.
+Use custom `AdminAction` handlers to trigger your own storage, background jobs, or internal service calls. OpsDeck does not impose a separate job system.

@@ -23,13 +23,12 @@ from typing import Any, Type, TYPE_CHECKING
 
 from pydantic import BaseModel
 
-from fastapi_matrix_admin.core.views import (
+from opsdeck.core.views import (
     AdminAction,
     DashboardCard,
     DetailPanel,
     ModelAdmin,
 )
-
 
 # Public API
 __all__ = [

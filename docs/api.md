@@ -1,13 +1,13 @@
 # API Reference
 
-## `MatrixAdmin`
+## `OpsDeck`
 
 Main entrypoint for integrating the admin into a FastAPI app.
 
 ### Constructor
 
 ```python
-MatrixAdmin(
+OpsDeck(
     app,
     secret_key,
     *,

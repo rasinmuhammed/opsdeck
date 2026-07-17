@@ -19,9 +19,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from fastapi_matrix_admin import MatrixAdmin
-from fastapi_matrix_admin.core.security import URLSigner, SignatureError
-from fastapi_matrix_admin.core.registry import (
+from opsdeck import OpsDeck
+from opsdeck.core.security import URLSigner, SignatureError
+from opsdeck.core.registry import (
     AdminRegistry,
     ModelNotFoundError,
     SubtypeNotAllowedError,
@@ -188,7 +188,7 @@ class TestAdminIntegration:
     def app(self):
         """Create test FastAPI app with admin."""
         app = FastAPI()
-        admin = MatrixAdmin(
+        admin = OpsDeck(
             app,
             secret_key="test-secret-key-for-testing",
             title="Test Admin",

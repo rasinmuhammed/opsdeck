@@ -3,9 +3,9 @@
 Use this setup when you want a proper internal admin instead of a public CRUD surface.
 
 ```python
-from fastapi_matrix_admin import MatrixAdmin
+from opsdeck import OpsDeck
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key=settings.ADMIN_SECRET_KEY,

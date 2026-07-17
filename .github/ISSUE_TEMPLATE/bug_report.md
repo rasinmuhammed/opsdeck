@@ -12,11 +12,11 @@ A clear and concise description of the bug.
 ## Environment
 - **OS**: (e.g., macOS 14.1, Ubuntu 22.04, Windows 11)
 - **Python Version**: (e.g., 3.11.5)
-- **FastAPI Matrix Admin Version**: (e.g., 0.1.0)
+- **OpsDeck Version**: (e.g., 0.1.0)
 - **Database**: (e.g., PostgreSQL 15, SQLite)
 
 ## Steps to Reproduce
-1. Install with `pip install fastapi-matrix-admin`
+1. Install with `pip install opsdeck`
 2. Create this model: ...
 3. Register with: ...
 4. Error occurs when: ...

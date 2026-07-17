@@ -1,10 +1,10 @@
 # Comparison: FastAPI Admin Panels
 
-This page compares FastAPI Matrix Admin against the other Python admin panel libraries. It names specific issues, not just philosophical differences. If you are choosing an admin panel, you deserve a direct comparison.
+This page compares OpsDeck against the other Python admin panel libraries. It names specific issues, not just philosophical differences. If you are choosing an admin panel, you deserve a direct comparison.
 
 ## The short answer
 
-| | Matrix Admin | SQLAdmin | starlette-admin | fastapi-admin |
+| | OpsDeck | SQLAdmin | starlette-admin | fastapi-admin |
 |---|---|---|---|---|
 | **Status** | Active | Active | Stalling | Dead (2021) |
 | **FastAPI-native** | Yes | Yes | Yes | Yes |
@@ -110,13 +110,13 @@ This library has 3,800 GitHub stars accumulated over its active period and conti
 
 ### Migrating from fastapi-admin
 
-See the [migration guide](recipes/migration-from-fastapi-admin.md) for a direct path from fastapi-admin to FastAPI Matrix Admin.
+See the [migration guide](recipes/migration-from-fastapi-admin.md) for a direct path from fastapi-admin to OpsDeck.
 
 ---
 
-## FastAPI Matrix Admin positioning
+## OpsDeck positioning
 
-FastAPI Matrix Admin is not trying to be the admin with the most features. It is the best admin for FastAPI teams that need audit logging, multi-tenant data isolation, and correct async SQLAlchemy behavior.
+OpsDeck is not trying to be the admin with the most features. It is the best admin for FastAPI teams that need audit logging, multi-tenant data isolation, and correct async SQLAlchemy behavior.
 
 **Where it wins outright:**
 
@@ -133,4 +133,4 @@ FastAPI Matrix Admin is not trying to be the admin with the most features. It is
 - MongoDB support (out of scope — SQLAlchemy only by design)
 - Community size and third-party guides
 
-If you need the largest community, use SQLAdmin and work around its bugs. If you need audit logging and multi-tenant isolation, FastAPI Matrix Admin is the only option in the Python ecosystem.
+If you need the largest community, use SQLAdmin and work around its bugs. If you need audit logging and multi-tenant isolation, OpsDeck is the only option in the Python ecosystem.

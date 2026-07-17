@@ -1,9 +1,9 @@
 # Recipe: Multi-Tenant Row Scoping
 
-If your app is multi-tenant, row scoping is one of the most important Matrix Admin features.
+If your app is multi-tenant, row scoping is one of the most important OpsDeck features.
 
 ```python
-from fastapi_matrix_admin import ModelAdmin
+from opsdeck import ModelAdmin
 
 
 class InvoiceAdmin(ModelAdmin):

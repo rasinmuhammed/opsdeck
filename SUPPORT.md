@@ -2,7 +2,7 @@
 
 ## Supported direction
 
-FastAPI Matrix Admin is optimized for:
+OpsDeck is optimized for:
 
 - FastAPI
 - SQLAlchemy 2.x async engines

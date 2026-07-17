@@ -40,7 +40,7 @@ jobs:
     - name: Run tests with coverage
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
       run: |
-        pytest --cov=fastapi_matrix_admin --cov-report=xml --cov-report=term
+        pytest --cov=opsdeck --cov-report=xml --cov-report=term
     
     - name: Upload coverage to Codecov
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'

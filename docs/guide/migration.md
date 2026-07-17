@@ -14,7 +14,7 @@ Move to `ModelAdmin` when you need:
 
 ## From generic admins
 
-FastAPI Matrix Admin is intentionally opinionated toward FastAPI + async SQLAlchemy. If you are migrating from a more generic admin library, expect a narrower but more FastAPI-aware integration path:
+OpsDeck is intentionally opinionated toward FastAPI + async SQLAlchemy. If you are migrating from a more generic admin library, expect a narrower but more FastAPI-aware integration path:
 
 - prefer your existing FastAPI auth model instead of a separate admin user store
 - use `row_scope()` for tenant-aware visibility

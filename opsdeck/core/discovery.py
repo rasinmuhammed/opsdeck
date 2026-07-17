@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Type, List
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import DeclarativeBase
-    from fastapi_matrix_admin.core.registry import AdminRegistry
+    from opsdeck.core.registry import AdminRegistry
 
 
 class AutoDiscovery:

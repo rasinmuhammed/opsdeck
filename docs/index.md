@@ -1,10 +1,10 @@
-# FastAPI Matrix Admin
+# OpsDeck
 
-FastAPI Matrix Admin is the FastAPI-native admin for async SQLAlchemy teams who want an interface that feels deliberate, memorable, and operationally serious.
+OpsDeck is the FastAPI-native admin for async SQLAlchemy teams who want an interface that feels deliberate, memorable, and operationally serious.
 
 ## Why it wins attention
 
-- strong Matrix visual identity
+- a clean, modern UI with an optional Matrix theme
 - pure Python integration path
 - FastAPI + SQLAlchemy focus instead of generic ORM sprawl
 - explicit permissions and row scoping
@@ -33,7 +33,7 @@ FastAPI Matrix Admin is the FastAPI-native admin for async SQLAlchemy teams who 
 
 ## Project direction
 
-Matrix Admin is being optimized for the current age of AI-assisted development. That means:
+OpsDeck is being optimized for the current age of AI-assisted development. That means:
 
 - better docs for coding assistants
 - explicit APIs that are easy to integrate correctly

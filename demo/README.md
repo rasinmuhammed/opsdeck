@@ -1,4 +1,4 @@
-# FastAPI Matrix Admin - Live Demo
+# OpsDeck - Live Demo
 
 🎯 **Live Demo:** [https://your-project.vercel.app](https://your-project.vercel.app)
 
@@ -51,7 +51,7 @@ vercel --prod
 
 ### Option 3: Vercel Button
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/fastapi-matrix-admin)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/opsdeck)
 
 ## Configuration
 
@@ -98,9 +98,9 @@ admin.register(BlogPost, readonly=True)
 
 ## Learn More
 
-- [GitHub Repository](https://github.com/yourusername/fastapi-matrix-admin)
-- [Documentation](https://github.com/yourusername/fastapi-matrix-admin#readme)
-- [PyPI Package](https://pypi.org/project/fastapi-matrix-admin/)
+- [GitHub Repository](https://github.com/yourusername/opsdeck)
+- [Documentation](https://github.com/yourusername/opsdeck#readme)
+- [PyPI Package](https://pypi.org/project/opsdeck/)
 
 ## License
 

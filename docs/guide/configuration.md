@@ -1,9 +1,9 @@
 # Configuration
 
-## `MatrixAdmin`
+## `OpsDeck`
 
 ```python
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     secret_key="change-me",
     engine=engine,

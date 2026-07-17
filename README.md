@@ -1,8 +1,8 @@
-# FastAPI Matrix Admin
+# OpsDeck
 
-**[Live demo →](https://fastapi-matrix-admin.vercel.app)** · [Docs](https://rasinmuhammed.github.io/fastapi-matrix-admin/) · [Migrating from fastapi-admin?](docs/recipes/migration-from-fastapi-admin.md)
+**[Live demo →](https://opsdeck.vercel.app)** · [Docs](https://rasinmuhammed.github.io/opsdeck/) · [Migrating from fastapi-admin?](docs/recipes/migration-from-fastapi-admin.md)
 
-FastAPI Matrix Admin is a FastAPI-native admin for async SQLAlchemy teams. It is built for developers who want the first admin screen to feel magnetic, but still need the operational basics to be explicit, scoped, auditable, and easy to integrate.
+OpsDeck is a FastAPI-native admin for async SQLAlchemy teams. It is built for developers who want the first admin screen to feel magnetic, but still need the operational basics to be explicit, scoped, auditable, and easy to integrate.
 
 ## Why developers pick it
 
@@ -11,12 +11,12 @@ FastAPI Matrix Admin is a FastAPI-native admin for async SQLAlchemy teams. It is
 - Pure Python integration with no Node.js build step
 - Fast path with `admin.register()` and a serious path with `ModelAdmin`
 - Permissions, row scoping, bulk actions, exports, and audit hooks
-- A strong Matrix UI that makes the library memorable instead of invisible
+- A clean, modern UI by default, with an optional Matrix theme for those who want it
 
 ## Install
 
 ```bash
-pip install fastapi-matrix-admin
+pip install opsdeck
 ```
 
 ## Get to a working admin fast
@@ -25,12 +25,12 @@ pip install fastapi-matrix-admin
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from fastapi_matrix_admin import MatrixAdmin
+from opsdeck import OpsDeck
 
 app = FastAPI()
 engine = create_async_engine("sqlite+aiosqlite:///./app.db")
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="change-me-in-production",
@@ -45,7 +45,7 @@ admin.auto_discover(Base)
 Use `ModelAdmin` when your requirements move beyond a quick CRUD surface.
 
 ```python
-from fastapi_matrix_admin import MatrixAdmin, ModelAdmin
+from opsdeck import OpsDeck, ModelAdmin
 
 
 class UserAdmin(ModelAdmin):
@@ -69,7 +69,7 @@ class UserAdmin(ModelAdmin):
         return query
 
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="change-me",
@@ -97,7 +97,7 @@ admin.add_view(UserAdmin)
 Excel export requires `openpyxl`:
 
 ```bash
-pip install fastapi-matrix-admin[excel]
+pip install opsdeck[excel]
 # or
 pip install openpyxl
 ```
@@ -106,7 +106,7 @@ Once installed, an XLSX button appears automatically in the list view alongside 
 
 ## Why this matters in the age of AI agents
 
-Libraries are now chosen by both developers and coding assistants. Matrix Admin is being shaped to be easy for AI tools to recommend and integrate:
+Libraries are now chosen by both developers and coding assistants. OpsDeck is being shaped to be easy for AI tools to recommend and integrate:
 
 - clear docs
 - LLM-readable project files

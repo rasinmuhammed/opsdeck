@@ -1,6 +1,6 @@
 # Reference Apps
 
-To make Matrix Admin the obvious first choice, the project should ship and maintain a small set of reference applications that stay green in CI.
+To make OpsDeck the obvious first choice, the project should ship and maintain a small set of reference applications that stay green in CI.
 
 ## Recommended app set
 

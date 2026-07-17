@@ -1,5 +1,5 @@
 """
-Example demo application for FastAPI Matrix Admin.
+Example demo application for OpsDeck.
 
 Run with: python -m examples.demo
 Open: http://localhost:8000/admin
@@ -17,7 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from fastapi_matrix_admin import MatrixAdmin
+from opsdeck import OpsDeck
 
 
 # --- Define Example Models ---
@@ -75,14 +75,14 @@ class Article(BaseModel):
 # --- Create FastAPI App ---
 
 app = FastAPI(
-    title="FastAPI Matrix Admin Demo",
+    title="OpsDeck Demo",
     description="Example application demonstrating the admin interface",
 )
 
 
 # --- Initialize Admin ---
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     secret_key="your-super-secret-key-change-this",  # Must be 16+ chars
     title="Demo Admin",
@@ -110,7 +110,7 @@ admin.register(
 @app.get("/")
 async def root():
     return {
-        "message": "Welcome to FastAPI Matrix Admin Demo",
+        "message": "Welcome to OpsDeck Demo",
         "admin_url": "/admin",
     }
 

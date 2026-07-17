@@ -21,7 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from fastapi_matrix_admin import MatrixAdmin
+from opsdeck import OpsDeck
 
 
 # --- SQLAlchemy Base ---
@@ -99,7 +99,7 @@ class Comment(Base):
 # --- FastAPI App ---
 
 app = FastAPI(
-    title="FastAPI Matrix Admin - Auto-Discovery Demo",
+    title="OpsDeck - Auto-Discovery Demo",
     description="✨ Watch the magic happen!",
 )
 
@@ -111,7 +111,7 @@ engine = create_async_engine(DATABASE_URL, echo=True)
 # --- THE MAGIC! ---
 # Just 3 lines to get a full admin panel with all models!
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="demo-secret-key-minimum-16-chars",

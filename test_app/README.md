@@ -1,4 +1,4 @@
-# Test Application for FastAPI Matrix Admin
+# Test Application for OpsDeck
 
 A simple test application to verify the package functionality.
 

@@ -1,12 +1,12 @@
 # Features
 
-FastAPI Matrix Admin is built for FastAPI developers who want a strong default and room to grow into more advanced workflows.
+OpsDeck is built for FastAPI developers who want a strong default and room to grow into more advanced workflows.
 
 ## 🔮 Smart Selects
 
 Dealing with Foreign Keys in admin panels is usually a pain. You get a dropdown with `Object <1>` or have to write custom queries.
 
-**Matrix Admin** changes that.
+**OpsDeck** changes that.
 
 - **Auto-Detection**: We automatically detect `ForeignKey` columns in your SQLAlchemy models.
 - **Searchable Dropdowns**: Instead of a plain `<select>`, you get a searchable, AJAX-powered widget.
