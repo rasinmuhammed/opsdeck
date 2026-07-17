@@ -1,8 +1,8 @@
-# Railway Deployment - FastAPI Matrix Admin Demo
+# Railway Deployment - OpsDeck Demo
 
 ## Quick Deploy to Railway
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/rasinmuhammed/fastapi-matrix-admin)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/rasinmuhammed/opsdeck)
 
 ### Manual Deployment
 

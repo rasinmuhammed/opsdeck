@@ -49,7 +49,7 @@ We follow **Coordinated Disclosure**:
 
 ### Security Features
 
-FastAPI Matrix Admin includes:
+OpsDeck includes:
 
 - ✅ **Signed URL Tokens**: Prevents IDOR and tampering
 - ✅ **CSRF Protection**: Signed cookies for state changes
@@ -96,4 +96,4 @@ Security researchers who responsibly disclose vulnerabilities will be:
 - Listed in CHANGELOG
 - Thanked publicly (if desired)
 
-Thank you for helping keep FastAPI Matrix Admin secure! 🛡️
+Thank you for helping keep OpsDeck secure! 🛡️

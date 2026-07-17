@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-pip install fastapi-matrix-admin
+pip install opsdeck
 ```
 
 ## Basic setup
@@ -12,12 +12,12 @@ pip install fastapi-matrix-admin
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from fastapi_matrix_admin import MatrixAdmin
+from opsdeck import OpsDeck
 
 app = FastAPI()
 engine = create_async_engine("sqlite+aiosqlite:///./app.db")
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="change-me-in-production",
@@ -47,7 +47,7 @@ admin.register(
 ### Advanced path with `ModelAdmin`
 
 ```python
-from fastapi_matrix_admin import ModelAdmin
+from opsdeck import ModelAdmin
 
 
 class UserAdmin(ModelAdmin):
@@ -79,7 +79,7 @@ admin.add_view(UserAdmin)
 If you pass `auth_model=YourAdminUserModel`, admin routes require authenticated users. Permissions are evaluated from each model config.
 
 ```python
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="change-me",

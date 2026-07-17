@@ -7,7 +7,7 @@ from sqlalchemy import String, Integer, Boolean, Text
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from fastapi_matrix_admin import MatrixAdmin
+from opsdeck import OpsDeck
 
 
 # Models
@@ -49,7 +49,7 @@ app = FastAPI(title="Demo App")
 engine = create_async_engine("sqlite+aiosqlite:///./demo.db", echo=False)
 
 # Initialize admin with auto-discovery
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="demo-secret-key-for-recording-only",

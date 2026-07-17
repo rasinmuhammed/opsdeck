@@ -3,7 +3,7 @@
 Bulk actions are a good fit for real backoffice work: moderation, triage, approval, and cleanup flows.
 
 ```python
-from fastapi_matrix_admin import AdminAction, ModelAdmin
+from opsdeck import AdminAction, ModelAdmin
 
 
 async def approve_invoices(*, request, session, model, ids, user, config):

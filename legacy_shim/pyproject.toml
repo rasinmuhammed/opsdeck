@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fastapi-matrix-admin"
+version = "2.0.0"
+description = "RENAMED: this project is now published as 'opsdeck'. This package installs opsdeck and re-exports its API."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    { name = "opsdeck contributors" }
+]
+classifiers = [
+    "Development Status :: 7 - Inactive",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+    "opsdeck>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/rasinmuhammed/opsdeck"
+
+[tool.hatch.build.targets.wheel]
+packages = ["fastapi_matrix_admin"]

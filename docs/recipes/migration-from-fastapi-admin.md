@@ -1,13 +1,13 @@
-# Migrating from fastapi-admin to FastAPI Matrix Admin
+# Migrating from fastapi-admin to OpsDeck
 
 The original `fastapi-admin` library (3,800 GitHub stars) has not had a release since August 2021. It requires Tortoise ORM and Redis, and it is incompatible with SQLAlchemy and modern FastAPI versions. This guide covers the direct migration path.
 
 ## What you are migrating away from
 
-`fastapi-admin` has three hard dependencies that do not exist in FastAPI Matrix Admin:
+`fastapi-admin` has three hard dependencies that do not exist in OpsDeck:
 
-- **Tortoise ORM** — fastapi-admin is built exclusively on Tortoise ORM. FastAPI Matrix Admin uses async SQLAlchemy 2.x.
-- **Redis** — fastapi-admin requires a running Redis instance for session management. FastAPI Matrix Admin uses itsdangerous-signed session cookies.
+- **Tortoise ORM** — fastapi-admin is built exclusively on Tortoise ORM. OpsDeck uses async SQLAlchemy 2.x.
+- **Redis** — fastapi-admin requires a running Redis instance for session management. OpsDeck uses itsdangerous-signed session cookies.
 - **Aerich** — the Tortoise ORM migration tool. You will migrate to Alembic.
 
 ---
@@ -30,10 +30,10 @@ class User(models.Model):
         table = "users"
 ```
 
-FastAPI Matrix Admin uses SQLAlchemy declarative models:
+OpsDeck uses SQLAlchemy declarative models:
 
 ```python
-# FastAPI Matrix Admin (SQLAlchemy 2.x)
+# OpsDeck (SQLAlchemy 2.x)
 from sqlalchemy import String, Boolean, DateTime
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from datetime import datetime
@@ -70,13 +70,13 @@ await app.init(
 )
 ```
 
-FastAPI Matrix Admin uses signed session cookies — no Redis, no external process:
+OpsDeck uses signed session cookies — no Redis, no external process:
 
 ```python
-# FastAPI Matrix Admin — no Redis needed
-from fastapi_matrix_admin import MatrixAdmin
+# OpsDeck — no Redis needed
+from opsdeck import OpsDeck
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="your-32-char-secret-key",  # Signs session cookies
@@ -111,18 +111,18 @@ async def startup():
     )
 ```
 
-FastAPI Matrix Admin initialization:
+OpsDeck initialization:
 
 ```python
-# FastAPI Matrix Admin
+# OpsDeck
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import create_async_engine
-from fastapi_matrix_admin import MatrixAdmin
+from opsdeck import OpsDeck
 
 app = FastAPI()
 engine = create_async_engine("postgresql+asyncpg://user:pass@localhost/db")
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="your-32-char-secret-key",
@@ -158,13 +158,13 @@ class Admin(AbstractAdmin):
         table = "admin"
 ```
 
-FastAPI Matrix Admin uses an `AdminUserMixin` for SQLAlchemy:
+OpsDeck uses an `AdminUserMixin` for SQLAlchemy:
 
 ```python
-# FastAPI Matrix Admin
+# OpsDeck
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import String
-from fastapi_matrix_admin.auth.models import AdminUserMixin
+from opsdeck.auth.models import AdminUserMixin
 
 class Base(DeclarativeBase):
     pass
@@ -208,7 +208,7 @@ alembic upgrade head
 
 ## Step 6: Migrate your data
 
-fastapi-admin and FastAPI Matrix Admin use completely different ORMs, so there is no automatic schema migration. Your data stays in the same database. The migration is only in the application code.
+fastapi-admin and OpsDeck use completely different ORMs, so there is no automatic schema migration. Your data stays in the same database. The migration is only in the application code.
 
 For each Tortoise ORM model:
 1. Create the equivalent SQLAlchemy model
@@ -238,9 +238,9 @@ from fastapi import FastAPI
 from sqlalchemy import String, Boolean
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from fastapi_matrix_admin import MatrixAdmin
-from fastapi_matrix_admin.auth.models import AdminUserMixin
-from fastapi_matrix_admin.audit.models import AuditLog
+from opsdeck import OpsDeck
+from opsdeck.auth.models import AdminUserMixin
+from opsdeck.audit.models import AuditLog
 
 app = FastAPI()
 engine = create_async_engine("sqlite+aiosqlite:///./app.db")
@@ -274,7 +274,7 @@ class User(Base):
         return self.username
 
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key="change-me-in-production",

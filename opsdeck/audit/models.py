@@ -33,7 +33,7 @@ class AuditLog(DeclarativeBase):
     Stores who changed what, when, and from where.
 
     Usage:
-        from fastapi_matrix_admin.audit.models import AuditLog
+        from opsdeck.audit.models import AuditLog
         from sqlalchemy.orm import declarative_base
 
         Base = declarative_base()

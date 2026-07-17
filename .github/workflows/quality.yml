@@ -26,18 +26,18 @@ jobs:
     
     - name: Check code formatting with Black
       run: |
-        black --check --diff fastapi_matrix_admin/
+        black --check --diff opsdeck/
     
     - name: Lint with Ruff
       run: |
-        ruff check fastapi_matrix_admin/
+        ruff check opsdeck/
     
     - name: Security check with Bandit
       run: |
-        bandit -r fastapi_matrix_admin/ -ll
+        bandit -r opsdeck/ -ll
       continue-on-error: true
     
     - name: Type check with mypy
       run: |
-        mypy fastapi_matrix_admin/ --ignore-missing-imports
+        mypy opsdeck/ --ignore-missing-imports
       continue-on-error: true

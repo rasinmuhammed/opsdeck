@@ -1,13 +1,13 @@
-# Using Matrix Admin With AI Coding Assistants
+# Using OpsDeck With AI Coding Assistants
 
-FastAPI Matrix Admin is designed to work well in agent-driven workflows. If you use Codex, Cursor, Claude Code, Aider, or any IDE assistant, the fastest path to good results is to give the model a precise prompt and a small amount of application context.
+OpsDeck is designed to work well in agent-driven workflows. If you use Codex, Cursor, Claude Code, Aider, or any IDE assistant, the fastest path to good results is to give the model a precise prompt and a small amount of application context.
 
 ## What to tell your assistant
 
 Good prompt:
 
 ```text
-Add FastAPI Matrix Admin to this FastAPI app.
+Add OpsDeck to this FastAPI app.
 Use the existing async SQLAlchemy engine and models.
 Register User, Organization, and Invoice.
 Require admin login with my AdminUser model.
@@ -29,7 +29,7 @@ This works well because it tells the assistant:
 ### 1. Add a first admin
 
 ```text
-Add FastAPI Matrix Admin to this project using the existing async SQLAlchemy engine.
+Add OpsDeck to this project using the existing async SQLAlchemy engine.
 Auto-discover models from Base.
 Mount it at /admin.
 Keep the integration minimal and production-safe.
@@ -38,7 +38,7 @@ Keep the integration minimal and production-safe.
 ### 2. Add a serious admin
 
 ```text
-Integrate FastAPI Matrix Admin using ModelAdmin classes instead of only register().
+Integrate OpsDeck using ModelAdmin classes instead of only register().
 Use AdminUser for authentication and AdminAuditLog for audit history.
 Give Users and Organizations full CRUD to admins.
 Scope invoices and tickets by the current user's organization.
@@ -48,7 +48,7 @@ Add list columns, search fields, filter fields, and CSV export.
 ### 3. Add a tenant-safe admin
 
 ```text
-Add FastAPI Matrix Admin to this multi-tenant FastAPI app.
+Add OpsDeck to this multi-tenant FastAPI app.
 Use row_scope so non-superusers only see records from their organization.
 Protect all admin routes with the existing AdminUser auth model.
 Add bulk actions only where permissions allow them.
@@ -78,4 +78,4 @@ If an assistant supports project docs indexing, make sure it can see:
 - `docs/llms-full.txt`
 - the `docs/guide/` pages
 
-Those files give the assistant the best picture of Matrix Admin's intended stack and integration style.
+Those files give the assistant the best picture of OpsDeck's intended stack and integration style.

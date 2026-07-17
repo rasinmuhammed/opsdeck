@@ -125,9 +125,9 @@ Optional (for enhanced features):
 Add to README.md:
 
 ```markdown
-[![Tests](https://github.com/rasinmuhammed/fastapi-matrix-admin/workflows/Tests/badge.svg)](https://github.com/rasinmuhammed/fastapi-matrix-admin/actions/workflows/tests.yml)
-[![Code Quality](https://github.com/rasinmuhammed/fastapi-matrix-admin/workflows/Code%20Quality/badge.svg)](https://github.com/rasinmuhammed/fastapi-matrix-admin/actions/workflows/quality.yml)
-[![codecov](https://codecov.io/gh/rasinmuhammed/fastapi-matrix-admin/branch/main/graph/badge.svg)](https://codecov.io/gh/rasinmuhammed/fastapi-matrix-admin)
+[![Tests](https://github.com/rasinmuhammed/opsdeck/workflows/Tests/badge.svg)](https://github.com/rasinmuhammed/opsdeck/actions/workflows/tests.yml)
+[![Code Quality](https://github.com/rasinmuhammed/opsdeck/workflows/Code%20Quality/badge.svg)](https://github.com/rasinmuhammed/opsdeck/actions/workflows/quality.yml)
+[![codecov](https://codecov.io/gh/rasinmuhammed/opsdeck/branch/main/graph/badge.svg)](https://codecov.io/gh/rasinmuhammed/opsdeck)
 ```
 
 ---
@@ -168,7 +168,7 @@ Add to README.md:
 
 ### Before First Push:
 - [ ] Initialize git: `git init`
-- [ ] Add remote: `git remote add origin https://github.com/rasinmuhammed/fastapi-matrix-admin.git`
+- [ ] Add remote: `git remote add origin https://github.com/rasinmuhammed/opsdeck.git`
 - [ ] First commit: `git add . && git commit -m "🎉 Initial release v0.1.0"`
 
 ### On GitHub:

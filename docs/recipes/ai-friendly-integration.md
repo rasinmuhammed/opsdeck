@@ -1,6 +1,6 @@
 # Recipe: AI-Friendly Integration
 
-If you want Matrix Admin to be easy for coding assistants to integrate into your app, structure the integration so the intent is obvious.
+If you want OpsDeck to be easy for coding assistants to integrate into your app, structure the integration so the intent is obvious.
 
 ## Recommended pattern
 
@@ -12,10 +12,10 @@ If you want Matrix Admin to be easy for coding assistants to integrate into your
 ## Example
 
 ```python
-from fastapi_matrix_admin import MatrixAdmin
+from opsdeck import OpsDeck
 from .admin_views import UserAdmin, TicketAdmin
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,
     secret_key=settings.ADMIN_SECRET_KEY,

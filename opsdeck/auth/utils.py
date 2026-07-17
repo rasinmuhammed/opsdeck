@@ -1,9 +1,9 @@
 """
-Authentication utilities for FastAPI Matrix Admin.
+Authentication utilities for OpsDeck.
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi_matrix_admin.auth.models import AdminUserMixin
+from opsdeck.auth.models import AdminUserMixin
 
 
 async def create_superuser(

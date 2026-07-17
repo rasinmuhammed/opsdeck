@@ -2,7 +2,7 @@
 
 ## Is this only a theme?
 
-No. The Matrix styling is the visual signature, but the project is moving toward a stronger FastAPI-native admin core: permissions, row scoping, bulk actions, audit hooks, and SQLAlchemy-focused ergonomics.
+No. OpsDeck is a FastAPI-native admin core: permissions, row scoping, bulk actions, audit hooks, and SQLAlchemy-focused ergonomics. It ships with a clean default UI, plus an optional Matrix theme (`theme="matrix"`) for those who want it.
 
 ## Does it support SQLAlchemy?
 
@@ -10,7 +10,7 @@ Yes. Async SQLAlchemy is the mainline path and the primary target for new featur
 
 ## Does it work with my existing FastAPI auth model?
 
-Yes. Pass your admin user model as `auth_model` and Matrix Admin will use it for login and permission checks.
+Yes. Pass your admin user model as `auth_model` and OpsDeck will use it for login and permission checks.
 
 ## How do I keep data tenant-safe?
 

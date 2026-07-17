@@ -1,8 +1,8 @@
-site_name: FastAPI Matrix Admin
+site_name: OpsDeck
 site_description: FastAPI-native admin for async SQLAlchemy teams.
-site_url: https://rasinmuhammed.github.io/fastapi-matrix-admin/
-repo_url: https://github.com/rasinmuhammed/fastapi-matrix-admin
-repo_name: rasinmuhammed/fastapi-matrix-admin
+site_url: https://rasinmuhammed.github.io/opsdeck/
+repo_url: https://github.com/rasinmuhammed/opsdeck
+repo_name: rasinmuhammed/opsdeck
 edit_uri: edit/main/docs/
 
 theme:
@@ -76,7 +76,7 @@ nav:
 
 extra:
   generator: false
-  homepage: https://rasinmuhammed.github.io/fastapi-matrix-admin/
+  homepage: https://rasinmuhammed.github.io/opsdeck/
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/rasinmuhammed

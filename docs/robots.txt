@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rasinmuhammed.github.io/fastapi-matrix-admin/sitemap.xml
+Sitemap: https://rasinmuhammed.github.io/opsdeck/sitemap.xml

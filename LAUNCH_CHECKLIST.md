@@ -1,4 +1,4 @@
-# FastAPI Matrix Admin - Launch Checklist
+# OpsDeck - Launch Checklist
 
 ## 🚀 Pre-Launch Checklist
 
@@ -49,7 +49,7 @@ twine check dist/*
 twine upload --repository testpypi dist/*
 
 # Test installation
-pip install --index-url https://test.pypi.org/simple/ fastapi-matrix-admin
+pip install --index-url https://test.pypi.org/simple/ opsdeck
 ```
 
 **Publish to PyPI:**
@@ -58,7 +58,7 @@ pip install --index-url https://test.pypi.org/simple/ fastapi-matrix-admin
 twine upload dist/*
 
 # Verify
-pip install fastapi-matrix-admin
+pip install opsdeck
 ```
 
 ### 🐙 GitHub Release

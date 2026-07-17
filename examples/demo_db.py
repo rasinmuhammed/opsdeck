@@ -21,7 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from fastapi_matrix_admin import MatrixAdmin
+from opsdeck import OpsDeck
 
 
 # --- SQLAlchemy Base ---
@@ -104,7 +104,7 @@ class Content(BaseModel):
 # --- Create FastAPI App ---
 
 app = FastAPI(
-    title="FastAPI Matrix Admin - Production Demo",
+    title="OpsDeck - Production Demo",
     description="Full-featured admin with database integration",
 )
 
@@ -124,7 +124,7 @@ engine = create_async_engine(
 
 # --- Initialize Admin with Database ---
 
-admin = MatrixAdmin(
+admin = OpsDeck(
     app,
     engine=engine,  # NEW: Pass database engine
     secret_key="production-secret-key-change-this-min-16-chars",
@@ -184,7 +184,7 @@ async def shutdown():
 @app.get("/")
 async def root():
     return {
-        "message": "FastAPI Matrix Admin - Production Demo",
+        "message": "OpsDeck - Production Demo",
         "features": [
             "✅ Real database integration (SQLite)",
             "✅ Full CRUD operations",

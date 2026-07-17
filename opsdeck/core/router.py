@@ -25,17 +25,17 @@ from starlette.status import (
 )
 
 if TYPE_CHECKING:
-    from fastapi_matrix_admin.core.registry import AdminRegistry
-    from fastapi_matrix_admin.core.security import URLSigner
-    from fastapi_matrix_admin.core.integrator import SchemaWalker
+    from opsdeck.core.registry import AdminRegistry
+    from opsdeck.core.security import URLSigner
+    from opsdeck.core.integrator import SchemaWalker
     from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi_matrix_admin.core.crud import CRUDBase
-from fastapi_matrix_admin.core.integrator import FieldDefinition, FieldType
-from fastapi_matrix_admin.audit.models import AuditLogger
-from fastapi_matrix_admin.auth.models import PermissionChecker
-from fastapi_matrix_admin.auth.service import AuthService
-from fastapi_matrix_admin.core.rate_limiter import RateLimiter
+from opsdeck.core.crud import CRUDBase
+from opsdeck.core.integrator import FieldDefinition, FieldType
+from opsdeck.audit.models import AuditLogger
+from opsdeck.auth.models import PermissionChecker
+from opsdeck.auth.service import AuthService
+from opsdeck.core.rate_limiter import RateLimiter
 
 
 def extract_sqlalchemy_fields(
@@ -464,7 +464,7 @@ def create_admin_router(
             )
 
         # 4. Session Creation
-        from fastapi_matrix_admin.auth.models import SessionData
+        from opsdeck.auth.models import SessionData
 
         session_data = SessionData.create(
             user, remember_me=bool(form_data.get("remember_me"))

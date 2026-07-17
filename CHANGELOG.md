@@ -4,12 +4,32 @@ All notable changes to this project are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2026-07-17
+
+### Changed
+
+- **Project renamed from `fastapi-matrix-admin` to `opsdeck`.** Install with `pip install opsdeck`; import with `from opsdeck import OpsDeck`.
+- The main class `MatrixAdmin` is now `OpsDeck`. A deprecated `MatrixAdmin` alias remains and emits a `DeprecationWarning`; it will be removed in a future release.
+- The Matrix theme is unchanged and still available via `theme="matrix"`. The rename affects the project identity only, not the themes.
+
+### Migration
+
+```python
+# before
+from fastapi_matrix_admin import MatrixAdmin
+admin = MatrixAdmin(app, engine=engine, ...)
+
+# after
+from opsdeck import OpsDeck
+admin = OpsDeck(app, engine=engine, ...)
+```
+
 ## [1.2.0] - 2026-05-18
 
 ### Added
 
-- Added `theme` parameter to `MatrixAdmin` — `theme="matrix"` (default) keeps the existing cyberpunk aesthetic, `theme="clean"` renders a neutral white/slate professional UI with no code changes required in page templates
-- Added Excel (`.xlsx`) export — XLSX button appears automatically in list view alongside CSV; requires `pip install fastapi-matrix-admin[excel]` or `pip install openpyxl`; exports with styled headers and frozen panes
+- Added `theme` parameter to `OpsDeck` — `theme="matrix"` (default) keeps the existing cyberpunk aesthetic, `theme="clean"` renders a neutral white/slate professional UI with no code changes required in page templates
+- Added Excel (`.xlsx`) export — XLSX button appears automatically in list view alongside CSV; requires `pip install opsdeck[excel]` or `pip install openpyxl`; exports with styled headers and frozen panes
 - Added many-to-many relationship support — SQLAlchemy `RelationshipProperty` with a secondary table is now detected automatically, rendered as a multi-select widget in the edit form, and saved correctly on both create and update
 - Added `migration-from-fastapi-admin.md` recipe — direct migration guide for the 3,800-star dead library (Tortoise ORM → SQLAlchemy, Redis removal, Aerich → Alembic, side-by-side model conversion)
 - Added `openpyxl` as `[excel]` optional dependency in `pyproject.toml`
@@ -50,7 +70,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 - Fixed dashboard behavior in restricted environments where `psutil.boot_time()` can raise permission errors
 - Fixed list table checkbox rendering so bulk-select UI behaves correctly
 - Fixed audit logging defaults by requiring an explicit audit model instead of instantiating an abstract base
-- Fixed critical bug where `MatrixAdmin` failed to auto-initialize session dependency, resulting in empty list views
+- Fixed critical bug where `OpsDeck` failed to auto-initialize session dependency, resulting in empty list views
 - Fixed demo application seeding logic and added reliable database reset for better testing
 - Fixed session cookie configuration so local development and production can use different secure-cookie behavior
 
@@ -68,6 +88,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 - Authentication and audit logging foundations
 - Matrix-styled admin UI
 
-[1.2.0]: https://github.com/rasinmuhammed/fastapi-matrix-admin/releases/tag/v1.2.0
-[1.1.0]: https://github.com/rasinmuhammed/fastapi-matrix-admin/releases/tag/v1.1.0
-[1.0.3]: https://github.com/rasinmuhammed/fastapi-matrix-admin/releases/tag/v1.0.3
+[1.2.0]: https://github.com/rasinmuhammed/opsdeck/releases/tag/v1.2.0
+[1.1.0]: https://github.com/rasinmuhammed/opsdeck/releases/tag/v1.1.0
+[1.0.3]: https://github.com/rasinmuhammed/opsdeck/releases/tag/v1.0.3

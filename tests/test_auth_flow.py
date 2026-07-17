@@ -1,7 +1,7 @@
 import asyncio
 import time
-from fastapi_matrix_admin.core.rate_limiter import RateLimiter
-from fastapi_matrix_admin.auth.models import AdminUserMixin
+from opsdeck.core.rate_limiter import RateLimiter
+from opsdeck.auth.models import AdminUserMixin
 
 
 async def test_rate_limiter():
@@ -32,7 +32,7 @@ async def test_rate_limiter():
 
 async def test_argon2_hashing():
     print("🔐 Testing Argon2 Hashing...")
-    from fastapi_matrix_admin.auth.models import pwd_context
+    from opsdeck.auth.models import pwd_context
 
     password = "secret-matrix-admin"
 
