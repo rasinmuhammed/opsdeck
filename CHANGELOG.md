@@ -4,6 +4,16 @@ All notable changes to this project are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [2.0.1] - 2026-07-17
+
+### Added
+
+- Python 3.13 support — now tested in CI across 3.10–3.13
+
+### Changed
+
+- Replaced the unmaintained `passlib` dependency with `pwdlib[argon2]`. passlib imports the stdlib `crypt` module, which was removed in Python 3.13, making it impossible to run OpsDeck there. Existing Argon2 password hashes remain fully compatible — no rehashing or migration needed. The `pwd_context` export keeps the same `.hash()` / `.verify()` API.
+
 ## [2.0.0] - 2026-07-17
 
 ### Changed

@@ -12,10 +12,14 @@ from datetime import datetime, timedelta
 from sqlalchemy import String, Boolean, Integer, DateTime, JSON
 from sqlalchemy.orm import Mapped, mapped_column
 from pydantic import BaseModel, ConfigDict, EmailStr
-from passlib.context import CryptContext
+from pwdlib import PasswordHash
+from pwdlib.hashers.argon2 import Argon2Hasher
 
-# Password context using Argon2 (winner of Password Hashing Competition)
-pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
+# Password hashing using Argon2 (winner of Password Hashing Competition).
+# pwdlib replaces the unmaintained passlib, which cannot run on
+# Python 3.13+ (it imports the removed stdlib crypt module).
+# Existing passlib-generated argon2 hashes remain verifiable.
+pwd_context = PasswordHash((Argon2Hasher(),))
 
 
 # --- SQLAlchemy Models ---

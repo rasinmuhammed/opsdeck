@@ -361,7 +361,7 @@ packaging==23.2
 pandas==1.5.3
 parse==1.19.0
 parso==0.8.4
-passlib==1.7.4
+pwdlib==0.3.0
 pathspec==0.12.1
 pdf2image==1.17.0
 pdfminer.six==20231228
